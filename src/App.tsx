@@ -86,21 +86,23 @@ function ImageCard({
   caption: string;
 }) {
   return (
-    <Card className="overflow-hidden">
-      <div className="aspect-video bg-muted flex items-center justify-center overflow-hidden">
-        <img
-          src={src}
-          alt={alt}
-          className="w-full h-full object-contain"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = "/assets/placeholder.png";
-          }}
-        />
-      </div>
-      <CardContent className="p-3">
-        <p className="text-sm text-muted-foreground text-center">{caption}</p>
-      </CardContent>
-    </Card>
+    <a href={src} target="_blank" rel="noopener noreferrer">
+      <Card className="overflow-hidden">
+        <div className="aspect-video  flex items-center justify-center overflow-hidden">
+          <img
+            src={src}
+            alt={alt}
+            className="w-full h-full object-contain"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = "/assets/placeholder.png";
+            }}
+          />
+        </div>
+        <CardContent className="p-3">
+          <p className="text-sm text-muted-foreground text-center">{caption}</p>
+        </CardContent>
+      </Card>
+    </a>
   );
 }
 
@@ -810,6 +812,24 @@ function App() {
                   src={"/assets/diagram.png"}
                   alt={""}
                   caption={"Complete cloud-based Hierarchy "}
+                />
+              </div>
+
+              <div className=" grid grid-cols-3">
+                <ImageCard
+                  src={"/assets/ecom/ecom-connection-main-page.png"}
+                  alt={""}
+                  caption={"Ecommerce Site Main Page "}
+                />{" "}
+                <ImageCard
+                  src={"/assets/ecom/ecom-connection-checkout-page.png"}
+                  alt={""}
+                  caption={"Ecommerce Site Product Page "}
+                />{" "}
+                <ImageCard
+                  src={"/assets/ecom/ecom-connection-cart-page.png"}
+                  alt={""}
+                  caption={"Ecommerce Site Cart Page "}
                 />
               </div>
             </section>
