@@ -1,32 +1,31 @@
-import { useState } from "react";
-import {
-  Server,
-  Database,
-  Globe,
-  Shield,
-  Cloud,
-  ChevronDown,
-  ChevronUp,
-  CheckCircle,
-  XCircle,
-  AlertTriangle,
-  Network,
-  ArrowRight,
-  BookOpen,
-  HelpCircle,
-  Users,
-} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import {
+  AlertTriangle,
+  BookOpen,
+  CheckCircle,
+  ChevronDown,
+  ChevronUp,
+  Cloud,
+  Database,
+  Globe,
+  HelpCircle,
+  Network,
+  Server,
+  Shield,
+  Users,
+  XCircle,
+} from "lucide-react";
+import { useState } from "react";
 import "./App.css";
 
 // Navigation items
