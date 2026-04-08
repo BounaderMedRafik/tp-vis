@@ -41,6 +41,17 @@ const navItems = [
   { id: "qa", label: "Theoretical Q&A", icon: HelpCircle },
 ];
 
+const chapterOwners: Record<string, string> = {
+  part1: "Haraoui Kouceila",
+  part2: "Bounader Mohamed Rafik",
+  part3: "Haraoui Kouceila",
+  part4: "Bounader Mohamed Rafik",
+  part5: "Haraoui Kouceila",
+  part6: "Bounader Mohamed Rafik",
+  challenges: "Joint work (Kouceila & Mohamed Rafik)",
+  qa: "Joint work (Kouceila & Mohamed Rafik)",
+};
+
 // Expandable Q&A Component
 function QASection({
   question,
@@ -340,6 +351,44 @@ function App() {
                   </CardContent>
                 </Card>
               </div>
+
+              <Card className="mt-8">
+                <CardHeader>
+                  <CardTitle>Chapter Contributions</CardTitle>
+                  <CardDescription>
+                    Chapter ownership between Haraoui Kouceila and Bounader
+                    Mohamed Rafik
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid sm:grid-cols-2 gap-3 text-sm">
+                    <div className="flex items-center justify-between border rounded-md px-3 py-2">
+                      <span className="font-medium">Part 1</span>
+                      <Badge variant="secondary">{chapterOwners.part1}</Badge>
+                    </div>
+                    <div className="flex items-center justify-between border rounded-md px-3 py-2">
+                      <span className="font-medium">Part 2</span>
+                      <Badge variant="secondary">{chapterOwners.part2}</Badge>
+                    </div>
+                    <div className="flex items-center justify-between border rounded-md px-3 py-2">
+                      <span className="font-medium">Part 3</span>
+                      <Badge variant="secondary">{chapterOwners.part3}</Badge>
+                    </div>
+                    <div className="flex items-center justify-between border rounded-md px-3 py-2">
+                      <span className="font-medium">Part 4</span>
+                      <Badge variant="secondary">{chapterOwners.part4}</Badge>
+                    </div>
+                    <div className="flex items-center justify-between border rounded-md px-3 py-2">
+                      <span className="font-medium">Part 5</span>
+                      <Badge variant="secondary">{chapterOwners.part5}</Badge>
+                    </div>
+                    <div className="flex items-center justify-between border rounded-md px-3 py-2">
+                      <span className="font-medium">Part 6</span>
+                      <Badge variant="secondary">{chapterOwners.part6}</Badge>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </section>
 
             <Separator className="my-12" />
@@ -354,6 +403,9 @@ function App() {
                   <h2 className="text-2xl font-bold">
                     Part 1: Creating Virtual Machines
                   </h2>
+                  <p className="text-sm font-medium text-primary mt-1">
+                    By {chapterOwners.part1}
+                  </p>
                   <p className="text-muted-foreground">
                     Setting up the infrastructure
                   </p>
@@ -443,6 +495,9 @@ function App() {
                   <h2 className="text-2xl font-bold">
                     Part 2: Installing Applications
                   </h2>
+                  <p className="text-sm font-medium text-primary mt-1">
+                    By {chapterOwners.part2}
+                  </p>
                   <p className="text-muted-foreground">
                     Web server and database setup
                   </p>
@@ -545,6 +600,9 @@ function App() {
                   <h2 className="text-2xl font-bold">
                     Part 3: Dynamic Website
                   </h2>
+                  <p className="text-sm font-medium text-primary mt-1">
+                    By {chapterOwners.part3}
+                  </p>
                   <p className="text-muted-foreground">
                     Interactive web application
                   </p>
@@ -663,6 +721,9 @@ function App() {
                   <h2 className="text-2xl font-bold">
                     Part 4: Networking and Security
                   </h2>
+                  <p className="text-sm font-medium text-primary mt-1">
+                    By {chapterOwners.part4}
+                  </p>
                   <p className="text-muted-foreground">
                     Firewall configuration and access control
                   </p>
@@ -750,6 +811,9 @@ function App() {
                   <h2 className="text-2xl font-bold">
                     Part 5: Cloud Backup and Storage
                   </h2>
+                  <p className="text-sm font-medium text-primary mt-1">
+                    By {chapterOwners.part5}
+                  </p>
                   <p className="text-muted-foreground">
                     Data backup and restoration
                   </p>
@@ -801,6 +865,9 @@ function App() {
                   <h2 className="text-2xl font-bold">
                     Part 6: Mini Cloud E-Commerce
                   </h2>
+                  <p className="text-sm font-medium text-primary mt-1">
+                    By {chapterOwners.part6}
+                  </p>
                   <p className="text-muted-foreground">
                     Complete cloud-based prototype
                   </p>
@@ -844,6 +911,9 @@ function App() {
                 </div>
                 <div>
                   <h2 className="text-2xl font-bold">Challenges & Solutions</h2>
+                  <p className="text-sm font-medium text-primary mt-1">
+                    By {chapterOwners.challenges}
+                  </p>
                   <p className="text-muted-foreground">
                     Problems encountered and how they were resolved
                   </p>
@@ -986,6 +1056,9 @@ function App() {
                   <h2 className="text-2xl font-bold">
                     Theoretical Questions & Answers
                   </h2>
+                  <p className="text-sm font-medium text-primary mt-1">
+                    By {chapterOwners.qa}
+                  </p>
                   <p className="text-muted-foreground">
                     Answers to all questions from the project document
                   </p>
