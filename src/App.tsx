@@ -906,25 +906,6 @@ function App() {
                       cloud storage. This ensures data integrity and provides
                       disaster recovery capabilities.
                     </p>
-                    <div className="bg-muted p-4 rounded-lg font-mono text-sm mt-4">
-                      <p>
-                        <span className="text-green-600">
-                          # Create database backup
-                        </span>
-                      </p>
-                      <p>mysqldump -u root -p users &gt; users_backup.sql</p>
-                      <p className="text-green-600 mt-2">
-                        # Compress the backup file
-                      </p>
-                      <p>gzip -v users_backup.sql</p>
-                      <p className="text-green-600 mt-2">
-                        # Upload to Azure Blob Storage
-                      </p>
-                      <p>
-                        az storage blob upload -f users_backup.sql.gz
-                        --container-name backups
-                      </p>
-                    </div>
                   </CardContent>
                 </Card>
 
