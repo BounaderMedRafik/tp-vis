@@ -23,9 +23,11 @@ import {
   Server,
   Shield,
   Users,
+  X,
   XCircle,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import "./App.css";
 
 // Navigation items
@@ -96,24 +98,95 @@ function ImageCard({
   alt: string;
   caption: string;
 }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen]);
+
   return (
-    <a href={src} target="_blank" rel="noopener noreferrer">
-      <Card className="overflow-hidden">
-        <div className="aspect-video  flex items-center justify-center overflow-hidden">
-          <img
-            src={src}
-            alt={alt}
-            className="w-full h-full object-contain"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = "/assets/placeholder.png";
-            }}
-          />
-        </div>
-        <CardContent className="p-3">
-          <p className="text-sm text-muted-foreground text-center">{caption}</p>
-        </CardContent>
-      </Card>
-    </a>
+    <>
+      <button
+        type="button"
+        onClick={() => setIsOpen(true)}
+        className="image-trigger block w-full text-left"
+        aria-label={`Open image preview: ${caption}`}
+      >
+        <Card className="overflow-hidden">
+          <div className="aspect-video  flex items-center justify-center overflow-hidden">
+            <img
+              src={src}
+              alt={alt}
+              className="w-full h-full object-contain"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = "/assets/placeholder.png";
+              }}
+            />
+          </div>
+          <CardContent className="p-3">
+            <p className="text-sm text-muted-foreground text-center">
+              {caption}
+            </p>
+          </CardContent>
+        </Card>
+      </button>
+
+      {isOpen &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[9999] bg-black/92 p-4 sm:p-6 md:p-8"
+            onClick={() => setIsOpen(false)}
+            role="dialog"
+            aria-modal="true"
+            aria-label={caption}
+          >
+            <div
+              className="relative flex h-full w-full flex-col items-center justify-center gap-3"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="absolute right-0 top-0 rounded-full bg-black/55 p-2 text-white hover:bg-black/75"
+                aria-label="Close image preview"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              <img
+                src={src}
+                alt={alt}
+                className="max-h-[82vh] w-auto max-w-full rounded-lg border border-white/25 bg-black/20 object-contain"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src =
+                    "/assets/placeholder.png";
+                }}
+              />
+              <p className="max-w-4xl text-center text-sm text-white/90">
+                {caption}
+              </p>
+            </div>
+          </div>,
+          document.body,
+        )}
+    </>
   );
 }
 
@@ -175,10 +248,10 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="doc-app min-h-screen bg-background">
       <div className="flex">
         {/* Sidebar Navigation */}
-        <aside className="fixed left-0 top-0 h-screen w-72 bg-card border-r z-50 hidden lg:block">
+        <aside className="doc-sidebar fixed left-0 top-0 h-screen w-72 bg-card border-r z-50 hidden lg:block">
           <div className="p-6">
             <div className="flex items-center gap-2 mb-8">
               <Cloud className="h-6 w-6 text-primary" />
@@ -204,7 +277,7 @@ function App() {
         </aside>
 
         {/* Mobile Header */}
-        <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur border-b lg:hidden">
+        <header className="doc-mobile-header fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur border-b lg:hidden">
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center gap-2">
               <Cloud className="h-5 w-5 text-primary" />
@@ -225,18 +298,18 @@ function App() {
         </header>
 
         {/* Main Content */}
-        <main className="flex-1 lg:ml-72">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 pt-20 lg:pt-12">
+        <main className="doc-main flex-1 lg:ml-72">
+          <div className="doc-content-shell max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 pt-20 lg:pt-12">
             {/* Overview Section */}
             <section id="overview" className="mb-16">
-              <div className="text-center mb-10">
+              <div className="hero-block text-center mb-10">
                 <Badge variant="outline" className="mb-4">
                   Master 1 IA - Virtualisation and Cloud Computing
                 </Badge>
-                <h1 className="text-3xl sm:text-4xl font-bold mb-4">
+                <h1 className="hero-title text-3xl sm:text-4xl font-bold mb-4">
                   Mini Project Documentation
                 </h1>
-                <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-6">
+                <p className="hero-subtitle text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-6">
                   A comprehensive guide to creating and managing virtual
                   machines, hosting dynamic websites, and implementing cloud
                   security.
@@ -815,7 +888,7 @@ function App() {
                     By {chapterOwners.part5}
                   </p>
                   <p className="text-muted-foreground">
-                    Data backup and restoration
+                    Data backup and restoration to Azure Cloud Storage
                   </p>
                 </div>
               </div>
@@ -823,14 +896,15 @@ function App() {
               <div className="space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Backup Strategy</CardTitle>
+                    <CardTitle>Backup Strategy Overview</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-muted-foreground">
-                      Database backups can be created using mysqldump and stored
-                      in cloud storage services like AWS S3, Google Cloud
-                      Storage, or Azure Blob Storage. The backup includes all
-                      user data and can be restored to verify data integrity.
+                      Database backups are created using mysqldump and stored in
+                      Azure Blob Storage. The backup process includes
+                      compressing and encrypting the backup file for secure
+                      cloud storage. This ensures data integrity and provides
+                      disaster recovery capabilities.
                     </p>
                     <div className="bg-muted p-4 rounded-lg font-mono text-sm mt-4">
                       <p>
@@ -840,13 +914,193 @@ function App() {
                       </p>
                       <p>mysqldump -u root -p users &gt; users_backup.sql</p>
                       <p className="text-green-600 mt-2">
-                        # Restore from backup
+                        # Compress the backup file
                       </p>
-                      <p>mysql -u root -p users &lt; users_backup.sql</p>
+                      <p>gzip -v users_backup.sql</p>
                       <p className="text-green-600 mt-2">
-                        # Upload to cloud storage
+                        # Upload to Azure Blob Storage
                       </p>
-                      <p>aws s3 cp users_backup.sql s3://my-backup-bucket/</p>
+                      <p>
+                        az storage blob upload -f users_backup.sql.gz
+                        --container-name backups
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Azure Storage Account Setup</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground mb-4">
+                      The first step is creating an Azure Storage Account where
+                      all backups will be stored. This provides a centralized,
+                      secure location for database backups with encryption and
+                      access control.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <ImageCard
+                  src={
+                    "/assets/ecom/backup/azure-portal-creating-a-storage-account.png"
+                  }
+                  alt={"Azure Portal storage account creation interface"}
+                  caption={"Creating Azure Storage Account"}
+                />
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Cloud Backup Architecture</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">
+                      The complete backup architecture shows how data flows from
+                      the local database through compression and encryption to
+                      Azure Cloud storage.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <ImageCard
+                  src={"/assets/ecom/backup/azure-backup-cloud.png"}
+                  alt={"Azure backup and cloud storage architecture diagram"}
+                  caption={"Cloud Backup Architecture"}
+                />
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Container Creation for Backups</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground mb-4">
+                      Azure Storage Containers organize backup files within the
+                      storage account. The container needs to be created with
+                      appropriate access levels and naming conventions.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <ImageCard
+                  src={"/assets/ecom/backup/creating-azure-container.png"}
+                  alt={"Azure container creation dialog"}
+                  caption={"Creating Backup Container in Azure"}
+                />
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Backup Automation Script</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground mb-4">
+                      A shell script automates the entire backup process -
+                      creating dumps, compressing, and uploading to Azure. This
+                      ensures consistent, scheduled backups without manual
+                      intervention.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <ImageCard
+                  src={"/assets/ecom/backup/creating-script-of-backup.png"}
+                  alt={"Bash script for automated database backup"}
+                  caption={"Backup Automation Script"}
+                />
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Identity and Access Management (IAM)</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground mb-4">
+                      Proper IAM configuration ensures that only authorized
+                      users and services can access the backup storage.
+                      Role-based access control is implemented for security.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <ImageCard
+                  src={"/assets/ecom/backup/iam-access-control-script.png"}
+                  alt={"IAM access control configuration script"}
+                  caption={"IAM Access Control Configuration"}
+                />
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Database Restore Process</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground mb-4">
+                      The restore script automates the recovery process by
+                      downloading the backup from Azure, decompressing it, and
+                      restoring the database. This is critical for disaster
+                      recovery scenarios.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <ImageCard
+                  src={"/assets/ecom/backup/restore-database-script.png"}
+                  alt={"Database restore script from Azure backup"}
+                  caption={"Database Restore Script"}
+                />
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Azure Portal Backup Verification</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground mb-4">
+                      The Azure Portal shows all uploaded backup files with
+                      their metadata including file size, creation date, and
+                      encryption status. This provides visibility into the
+                      backup storage.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <ImageCard
+                  src={
+                    "/assets/ecom/backup/screenshot-from-azure-portal-of-ecom-backup.png"
+                  }
+                  alt={"Azure Portal showing backup files and metadata"}
+                  caption={"Azure Portal Backup Files Overview"}
+                />
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Key Takeaways</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    <div className="flex gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                      <p className="text-sm">
+                        Automated backup scripts ensure consistent, scheduled
+                        backups without manual intervention
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                      <p className="text-sm">
+                        Azure Blob Storage provides secure, scalable cloud
+                        storage with built-in redundancy
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                      <p className="text-sm">
+                        IAM controls ensure only authorized entities can access
+                        sensitive backup data
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                      <p className="text-sm">
+                        Restore automation enables quick recovery in case of
+                        data loss or disasters
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -877,25 +1131,25 @@ function App() {
               <div className="space-y-6">
                 <ImageCard
                   src={"/assets/diagram.png"}
-                  alt={""}
+                  alt={"Cloud architecture hierarchy diagram"}
                   caption={"Complete cloud-based Hierarchy "}
                 />
               </div>
 
-              <div className=" grid grid-cols-3">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <ImageCard
                   src={"/assets/ecom/ecom-connection-main-page.png"}
-                  alt={""}
+                  alt={"E-commerce website main page"}
                   caption={"Ecommerce Site Main Page "}
-                />{" "}
+                />
                 <ImageCard
                   src={"/assets/ecom/ecom-connection-checkout-page.png"}
-                  alt={""}
+                  alt={"E-commerce checkout page"}
                   caption={"Ecommerce Site Product Page "}
-                />{" "}
+                />
                 <ImageCard
                   src={"/assets/ecom/ecom-connection-cart-page.png"}
-                  alt={""}
+                  alt={"E-commerce cart page"}
                   caption={"Ecommerce Site Cart Page "}
                 />
               </div>
@@ -1913,7 +2167,7 @@ function App() {
             </section>
 
             {/* Footer */}
-            <footer className="text-center py-8 text-muted-foreground border-t mt-12">
+            <footer className="doc-footer text-center py-8 text-muted-foreground border-t mt-12">
               <p className="font-semibold text-foreground">
                 Cloud Computing Mini Project Documentation
               </p>
